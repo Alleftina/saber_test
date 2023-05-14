@@ -1,5 +1,5 @@
 from unittest import TestCase, main
-from bin.main import cli
+from bin.app import cli
 from click.testing import CliRunner
 
 dict_ex = {'builds':
@@ -15,7 +15,7 @@ class ListCommandTest(TestCase):
     def test_right_params(self):
         runner = CliRunner()
         result = runner.invoke(cli, ['list', 'builds'])
-        self.assertEqual(result.exit_code, 0 )
+        self.assertEqual(result.exit_code, 0)
 
     def test_wrong_params_1(self):
         runner = CliRunner()

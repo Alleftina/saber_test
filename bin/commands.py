@@ -8,7 +8,7 @@ white = colorama.Fore.LIGHTWHITE_EX
 green = colorama.Fore.LIGHTGREEN_EX
 
 
-def find_all_names(yaml_file: dict) -> Generator:
+def find_all_names(yaml_file: dict) -> Generator[str, None, None]:
     if type(yaml_file) is not dict:
         yield None
         return None
@@ -18,7 +18,7 @@ def find_all_names(yaml_file: dict) -> Generator:
                 yield name
 
 
-def find_all_keys(yaml_file: dict) -> Generator:
+def find_all_keys(yaml_file: dict) -> Generator[dict, None, None]:
     if type(yaml_file) is not dict:
         yield None
         return None
@@ -40,15 +40,10 @@ def list_command(yaml_file: dict, _type: str) -> None:
 def get_command(yaml_file: dict, name_to_find: str, type_arg: str) -> None:
     if type(yaml_file) is not dict:
         return None
-    key_to_find = None
-    dicts = find_all_keys(yaml_file)
-    if type_arg == 'task':
-        key_to_find = 'dependencies'
-    elif type_arg == 'build':
-        key_to_find = 'tasks'
-    else:
+    if type_arg not in {'task', 'build'}:
         raise ValueError('Unknown type spec. Must be task or build')
-    for dict_ in dicts:
+    key_to_find = 'dependencies' if type_arg == 'task' else 'tasks'
+    for dict_ in find_all_keys(yaml_file):
         if name_to_find == dict_.get('name'):
             print(f"{green}{type_arg} info: ")
             print(f"{green}*{white} name: {name_to_find}")
